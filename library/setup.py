@@ -32,5 +32,5 @@ if parse_version(__version__) < minimum_version:
 
 setup(
     packages=['envirophat'],
-    install_requires=['setuptools>={}'.format(minimum_version), 'RPi.GPIO']
+    install_requires=['setuptools>={}'.format(minimum_version), 'adafruit-circuitpython-mcp230xx']
 )

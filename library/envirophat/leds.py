@@ -1,15 +1,18 @@
 from sys import exit
 
 try:
-    import RPi.GPIO as GPIO
+    import board
+    import busio
+    from adafruit_mcp230xx.mcp23017 import MCP23017
 except ImportError:
-    exit("This library requires the RPi.GPIO module\nInstall with: sudo pip install RPi.GPIO")
+    exit("This library requires the adafruit_mcp230xx module\nInstall with: sudo pip install adafruit-circuitpython-mcp230xx")
 
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(4, GPIO.OUT)
-GPIO.output(4, 0)
+# Set up MCP23017
+i2c = busio.I2C(board.SCL, board.SDA)
+mcp = MCP23017(i2c, address=0x21)
+leds_pin = mcp.get_pin(3)
+leds_pin.switch_to_output()
+leds_pin.value = False
 
 class leds:
     def __init__(self, status=0):
@@ -18,13 +21,13 @@ class leds:
     def on(self):
         """Turn LEDs on."""
         self.status = 1
-        GPIO.output(4, 1)
+        leds_pin.value = True
         return True
 
     def off(self):
         """Turn LEDs off."""
         self.status = 0
-        GPIO.output(4, 0)
+        leds_pin.value = False
 
     def is_on(self):
         """Return True if LED is on."""
